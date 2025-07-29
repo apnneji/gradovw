@@ -9,7 +9,7 @@ function App() {
   const [showPassword, setShowPassword] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const isWeb = false; // Change to true if running on the web
   const styles = {
     eyeIcon: {
       position: 'absolute',
@@ -98,7 +98,6 @@ function App() {
     setLoading(true);
     const localURL = `http://localhost:5001/api/user/GetUserLogin?username=${username}`;
     const webURL = `http://apnneji-001-site1.ktempurl.com/api/User/GetUserLogin?username=${username}`;
-    const isWeb = false;
     try {
       let apiURL = '';
       if (isWeb) {
