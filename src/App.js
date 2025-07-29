@@ -125,7 +125,7 @@ function App() {
       }
       setLoggedIn(true);
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(`Login failed. Please try again. ${err.message}`);
     } finally {
       setLoading(false);
     }
