@@ -79,6 +79,12 @@ function App() {
       color: '#373E73',
       textAlign: 'center',
     },
+    caption: {
+      marginTop: '1rem',
+      fontSize: '0.9rem',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
   };
 
   // Example data for the table
@@ -124,7 +130,7 @@ function App() {
       }
       setLoggedIn(true);
     } catch (err) {
-      setError(`Login failed. Please try again. ${err.message}-${webURL}`);
+      setError(`Login failed. Please try again. ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -171,7 +177,7 @@ function App() {
 
   return (
     <div className="login-bg">
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login-form" style={{ background: isWeb ? '#fff' : '#DEBDC5' }} onSubmit={handleSubmit}>
         <h2>Login</h2>
         <input
           type="text"
@@ -202,6 +208,9 @@ function App() {
         {loading && <div style={styles.spinner}>Checking credentials...</div>}
         <button type="submit">Login</button>
         <img src={stoLogo} alt="STO Logo" className="login-logo" />
+        <div style={{ ...styles.caption, color: isWeb ? '#323FE6' : '#590410' }}>
+          {isWeb ? 'Web' : 'local'}
+        </div>
       </form>
     </div>
   );
