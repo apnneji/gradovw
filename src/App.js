@@ -96,8 +96,17 @@ function App() {
     }
     setError('');
     setLoading(true);
+    const localURL = `http://localhost:5001/api/user/GetUserLogin?username=${username}`;
+    const webURL = `http://apnneji-001-site1.ktempurl.com/api/User/GetUserLogin?username=${username}`;
+    const isWeb = false;
     try {
-      const response = await fetch(`http://localhost:5001/api/user/GetUserLogin?username=${username}`);
+      let apiURL = '';
+      if (isWeb) {
+        apiURL = webURL;
+      } else {
+        apiURL = localURL;
+      }
+      const response = await fetch(apiURL);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
