@@ -98,7 +98,7 @@ function App() {
     setLoading(true);
     const localURL = `http://localhost:5001/api/user/GetUserLogin?username=${username}`;
     const webURL = `http://apnneji-001-site1.ktempurl.com/api/User/GetUserLogin?username=${username}`;
-    const isWeb = true;
+    const isWeb = false;
     try {
       let apiURL = '';
       if (isWeb) {
