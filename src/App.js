@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import stoLogo from './sto_logo.png';
 import MainForm from './MainForm';
-import { isWeb, getApiUrl } from './config';
+import { isWeb, getApiUrl, webapiusername, webapipassword } from './config';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -52,9 +52,25 @@ function App() {
     }
     setError('');
     setLoading(true);
+    const apiURL = getApiUrl(`GetUserLogin?username=${username}`);
     try {
-      const apiURL = getApiUrl(`GetUserLogin?username=${username}`);
-      const response = await fetch(apiURL);
+      
+      
+      // Prepare headers
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+
+      // Add authorization headers if isWeb is true
+      if (isWeb) {
+        headers['Authorization'] = `Basic ${btoa(`${webapiusername}:${webapipassword}`)}`;
+      }
+
+      const response = await fetch(apiURL, {
+        method: 'GET',
+        headers: headers,
+      });
+      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -67,13 +83,13 @@ function App() {
         return;
       }
       if (user.pword !== password) {
-        setError('Invalid username or password.p');
+        setError('Invalid username or password.');
         setLoading(false);
         return;
       }
       setLoggedIn(true);
     } catch (err) {
-      setError(`Login failed. Please try again. ${err.message}`);
+      setError(`Login failed. Please try again. ${err.message}-${apiURL}`);
     } finally {
       setLoading(false);
     }

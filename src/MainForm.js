@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getApiUrl } from './config';
+import { getApiUrl, isWeb, webapiusername, webapipassword } from './config';
 
 function MainForm({ username, onLogout }) {
   const [students, setStudents] = useState([]);
@@ -62,7 +62,22 @@ function MainForm({ username, onLogout }) {
     setLoadingGrades(true);
     try {
       const apiURL = getApiUrl(`GetStudentGrade?username=${username}`);
-      const response = await fetch(apiURL);
+      
+      // Prepare headers
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+
+      // Add authorization headers if isWeb is true
+      if (isWeb) {
+        headers['Authorization'] = `Basic ${btoa(`${webapiusername}:${webapipassword}`)}`;
+      }
+
+      const response = await fetch(apiURL, {
+        method: 'GET',
+        headers: headers,
+      });
+      
       if (!response.ok) {
         throw new Error('Failed to fetch student grades');
       }
