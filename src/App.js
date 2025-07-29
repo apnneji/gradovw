@@ -8,6 +8,7 @@ function App() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const styles = {
     eyeIcon: {
@@ -73,6 +74,11 @@ function App() {
     tr: {
       background: '#fff',
     },
+    spinner: {
+      margin: '1rem auto',
+      color: '#373E73',
+      textAlign: 'center',
+    },
   };
 
   // Example data for the table
@@ -82,14 +88,38 @@ function App() {
     { studentname: 'Pedro Reyes', subjectname: 'English', first: 78, second: 80, third: 82, fourth: 85 },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
       setError('Please enter both username and password.');
       return;
     }
     setError('');
-    setLoggedIn(true);
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5001/api/user/GetUserLogin?username=${username}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      // Use the first record from the API response array
+      const user = Array.isArray(data) ? data[0] : data;
+      if (!user || !user.pword) {
+        setError(`Invalid username or password.${user.pword}`);
+        setLoading(false);
+        return;
+      }
+      if (user.pword !== password) {
+        setError('Invalid username or password.p');
+        setLoading(false);
+        return;
+      }
+      setLoggedIn(true);
+    } catch (err) {
+      setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -161,6 +191,7 @@ function App() {
           </span>
         </div>
         {error && <div className="error">{error}</div>}
+        {loading && <div style={styles.spinner}>Checking credentials...</div>}
         <button type="submit">Login</button>
         <img src={stoLogo} alt="STO Logo" className="login-logo" />
       </form>
