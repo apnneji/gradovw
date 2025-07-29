@@ -1,5 +1,5 @@
 // Global configuration
-export const isWeb = false; // Change to false for local development
+export const isWeb = true; // Change to false for local development
 
 // API credentials
 export const webapiusername = '11253820';
